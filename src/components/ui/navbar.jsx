@@ -12,7 +12,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="top-0 sticky z-50 bg-white/80 border-b border-gray-200 w-full backdrop-blur">
+    <header className="top-0 sticky z-50 bg-white border-b  w-full backdrop-blur">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-3">
