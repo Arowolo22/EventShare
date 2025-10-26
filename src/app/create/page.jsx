@@ -48,7 +48,7 @@ export default function create() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 bg-green-900  text-white font-semibold py-3 px-6 rounded-lg "
+              className="w-full  bg-green-900  text-white font-semibold py-3 px-6 rounded-lg "
             >
               Create Event
             </button>
