@@ -1,15 +1,12 @@
-"use client"
+"use client";
 import { Camera } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function Navbar() {
-   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navigation = [
-   
-    { href: "/dashboard", label: "Dashboard" },
-  ];
+  const navigation = [{ href: "/dashboard", label: "Dashboard" }];
 
   return (
     <header className="top-0 sticky z-50 bg-white border-b  w-full backdrop-blur">
