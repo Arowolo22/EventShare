@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navigation = [{ href: "/dashboard", label: "Dashboard" }];
+  const navigation = [{ href: "/dashboard", label: "Organizer Login" }];
 
   return (
     <header className="top-0 sticky z-50 bg-white border-b  w-full backdrop-blur">

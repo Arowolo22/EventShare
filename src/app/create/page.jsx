@@ -26,7 +26,7 @@ export default function create() {
                 id="eventName"
                 name="eventName"
                 placeholder="Arowolo's Wedding"
-                className="w-full px-4 py-3 border border-gray-500 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 border text-black border-gray-500 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent outline-none transition"
               />
             </div>
 
