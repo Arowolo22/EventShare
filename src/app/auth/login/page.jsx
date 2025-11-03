@@ -3,26 +3,41 @@
 import Navbar from "@/components/ui/navbar";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import toast from "react-hot-toast";
+import { auth } from "@/auth-server/firebase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Add authentication logic here
-    // For now, redirect to dashboard
-    router.push("/dashboard");
+    setError("");
+    setLoading(true);
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast.success("User Logged In Successfully");
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err.message);
+      console.log("");
+    } 
   };
 
+  //  router.push("/dashboard");
   return (
     <>
       <Navbar />
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-27">
         <div className="max-w-7xl text-center mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h1 className="text-gray-900 font-bold text-3xl">Organizer Login</h1>
-          <p className="text-gray-600 mt-2">Sign in to manage your events</p>
+          <h1 className="text-gray-900 font-bold text-3xl">Organizer Access</h1>
+          <p className="text-gray-600 mt-2">
+            Enter your admin email and password to access the dashboard
+          </p>
 
           <form
             onSubmit={handleSubmit}
