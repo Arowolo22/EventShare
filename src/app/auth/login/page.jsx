@@ -12,11 +12,12 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const [error, setError] = useState("");
+    // const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    // setLoading(true);
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -32,7 +33,7 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <section className="bg-gray-50 py-27">
+      <section className="bg-gray-50 py-33">
         <div className="max-w-7xl text-center mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="text-gray-900 font-bold text-3xl">Organizer Access</h1>
           <p className="text-gray-600 mt-2">
@@ -81,6 +82,10 @@ export default function Login() {
               />
             </div>
 
+            {error && (
+              <div className="text-red-500 text-sm text-center">{error}</div>
+            )}
+
             <button
               type="submit"
               className="w-full bg-green-900 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-800 transition"
@@ -89,7 +94,7 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          {/* <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
               <a
@@ -99,7 +104,7 @@ export default function Login() {
                 Sign up
               </a>
             </p>
-          </div>
+          </div> */}
         </div>
       </section>
     </>
