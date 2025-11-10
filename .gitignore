@@ -9,7 +9,8 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-auth-server
+auth-server/
+
 
 # testing
 /coverage
