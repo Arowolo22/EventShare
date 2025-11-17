@@ -12,12 +12,12 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const [error, setError] = useState("");
-    // const [loading, setLoading] = useState(false);
+   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    // setLoading(true);
+   
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -29,7 +29,7 @@ export default function Login() {
     } 
   };
 
-  //  router.push("/dashboard");
+  
   return (
     <>
       <Navbar />
