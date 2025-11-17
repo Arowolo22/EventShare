@@ -2,31 +2,55 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/ui/navbar";
 
-const generateEventCode = () =>
-  Array.from({ length: 6 }, () =>
-    "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".charAt(Math.floor(Math.random() * 32))
-  ).join("");
-
 export default function Create() {
+  const router = useRouter();
   const [eventName, setEventName] = useState("");
   const [description, setDescription] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [eventCode, setEventCode] = useState(generateEventCode());
+  const [createdEvent, setCreatedEvent] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const isFormValid = useMemo(() => eventName.trim().length > 0, [eventName]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isFormValid) return;
-    setEventCode(generateEventCode());
-    setIsModalOpen(true);
+    if (!isFormValid || submitting) return;
+
+    setSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventName, description }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || "Unable to create event.");
+      }
+
+      const { event } = await response.json();
+      setCreatedEvent(event);
+      setIsModalOpen(true);
+      setEventName("");
+      setDescription("");
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleCopy = async () => {
+    if (!createdEvent?.code) return;
     try {
-      await navigator.clipboard.writeText(eventCode);
+      await navigator.clipboard.writeText(createdEvent.code);
     } catch (_error) {
       // noop
     }
@@ -87,18 +111,22 @@ export default function Create() {
               />
             </div>
 
+            {errorMessage && (
+              <p className="mb-4 text-sm text-red-600">{errorMessage}</p>
+            )}
+
             <button
               type="submit"
-              disabled={!isFormValid}
+              disabled={!isFormValid || submitting}
               className="w-full bg-green-900 text-white font-semibold py-3 px-6 rounded-lg disabled:opacity-50"
             >
-              Create Event
+              {submitting ? "Creating..." : "Create Event"}
             </button>
           </form>
         </div>
       </section>
 
-      {isModalOpen && (
+      {isModalOpen && createdEvent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
           <div className="w-full max-w-lg rounded-2xl bg-white p-8 shadow-2xl">
             <div className="flex items-start justify-between">
@@ -122,12 +150,12 @@ export default function Create() {
             <div className="mt-6 space-y-4 rounded-2xl bg-[#fbfcf7] p-6">
               <div className="text-sm text-gray-500">Event Name</div>
               <div className="text-lg font-semibold text-gray-900">
-                {eventName}
+                {createdEvent.name}
               </div>
               <div className="text-sm text-gray-500">Event Code</div>
               <div className="flex items-center gap-3">
                 <div className="flex-1 rounded-lg border border-gray-200 bg-white py-3 text-center text-2xl font-bold tracking-[0.35em] text-gray-900">
-                  {eventCode}
+                  {createdEvent.code}
                 </div>
                 <button
                   type="button"
@@ -142,12 +170,19 @@ export default function Create() {
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <button
                 type="button"
+                onClick={() => {
+                  if (createdEvent?.code) {
+                    router.push(`/gallery/${createdEvent.code}`);
+                    setIsModalOpen(false);
+                  }
+                }}
                 className="rounded-lg border border-green-900 py-3 text-sm font-semibold text-green-900 transition hover:bg-green-50"
               >
                 Go to Gallery
               </button>
               <button
                 type="button"
+                onClick={handleClose}
                 className="rounded-lg bg-green-900 py-3 text-sm font-semibold text-white transition hover:bg-green-800"
               >
                 View Dashboard

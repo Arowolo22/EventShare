@@ -11,7 +11,7 @@
 !.yarn/versions
 auth-server/firebase.js
 
-
+.env.local
 # testing
 /coverage
 
