@@ -102,7 +102,7 @@ export default function GalleryPage({ params, searchParams }) {
   return (
     <>
       <Navbar />
-      <section className="bg-gray-50 py-12">
+      <section className="bg-gray-50 w-full py-12 min-h-screen">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl bg-white p-8 shadow">
             {loading ? (
