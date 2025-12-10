@@ -177,7 +177,7 @@ export default function GalleryPage({ params, searchParams }) {
                 <div className="mt-10">
                   {photos.length === 0 ? (
                     <p className="text-center text-gray-500">
-                      No photos yet. Be the first to add one!
+                      No photos yet.
                     </p>
                   ) : (
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

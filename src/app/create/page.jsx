@@ -167,7 +167,7 @@ export default function Create() {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="mt-6 gap-4 flex justify-center">
               <button
                 type="button"
                 onClick={() => {
@@ -176,17 +176,11 @@ export default function Create() {
                     setIsModalOpen(false);
                   }
                 }}
-                className="rounded-lg border border-green-900 py-3 text-sm font-semibold text-green-900 transition hover:bg-green-50"
+                className="rounded-lg border border-green-900 py-3 px-6 text-sm font-semibold text-green-900 transition hover:bg-green-50"
               >
                 Go to Gallery
               </button>
-              <button
-                type="button"
-                onClick={handleClose}
-                className="rounded-lg bg-green-900 py-3 text-sm font-semibold text-white transition hover:bg-green-800"
-              >
-                View Dashboard
-              </button>
+              
             </div>
           </div>
         </div>
