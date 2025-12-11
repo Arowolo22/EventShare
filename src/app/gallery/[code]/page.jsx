@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import Navbar from "@/components/ui/navbar";
+import { Upload } from "lucide-react";
 
 export default function GalleryPage({ params, searchParams }) {
   const resolvedParams = usePromise(params);
@@ -104,7 +105,7 @@ export default function GalleryPage({ params, searchParams }) {
       <Navbar />
       <section className="bg-gray-50 w-full py-12 min-h-screen">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl bg-white p-8 shadow">
+          <div className="rounded-2xl bg-white relative p-8 shadow">
             {loading ? (
               <p className="text-gray-500">Loading gallery...</p>
             ) : errorMessage ? (
@@ -113,9 +114,12 @@ export default function GalleryPage({ params, searchParams }) {
               <>
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm uppercase tracking-widest text-green-800">
-                      Gallery
-                    </p>
+                    {guestName && (
+                      <p className="text-sm text-gray-500">
+                        Welcome, {guestName}!
+                      </p>
+                    )}
+
                     <h1 className="text-3xl font-semibold text-gray-900">
                       {event?.name}
                     </h1>
@@ -125,11 +129,6 @@ export default function GalleryPage({ params, searchParams }) {
                         {codeParam}
                       </span>
                     </p>
-                    {guestName && (
-                      <p className="text-sm text-gray-500">
-                        Welcome, {guestName}!
-                      </p>
-                    )}
                   </div>
                   <div className="text-right">
                     <p className="text-4xl font-bold text-gray-900">
@@ -141,44 +140,33 @@ export default function GalleryPage({ params, searchParams }) {
                   </div>
                 </div>
 
-                <div className="mt-8 rounded-xl border border-dashed border-green-900/40 bg-green-50/50 p-6 text-center">
-                  <p className="text-lg font-medium text-gray-900">
-                    Add your pictures
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Upload directly to this shared gallery. Cloudinary will host
-                    every image securely.
-                  </p>
-                  <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                    <label
-                      htmlFor="photo-upload"
-                      className="cursor-pointer rounded-lg bg-green-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-green-800"
-                    >
-                      {uploading ? "Uploading..." : "Select Photos"}
-                      <input
-                        id="photo-upload"
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="hidden"
-                        onChange={handleFileChange}
-                        disabled={uploading}
-                      />
-                    </label>
-                    <p className="text-xs text-gray-500">
-                      JPG, PNG or HEIC • up to 10MB each
-                    </p>
-                  </div>
-                  {uploadError && (
-                    <p className="mt-4 text-sm text-red-600">{uploadError}</p>
-                  )}
+                <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                  <label
+                    htmlFor="photo-upload"
+                    className="fixed right-6 bottom-6 z-20 cursor-pointer"
+                  >
+                    <div className="bg-green-900 flex items-center justify-center text-white h-14 w-14 rounded-full shadow-lg">
+                      <Upload className="h-6 w-6" />
+                    </div>
+
+                    <input
+                      id="photo-upload"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="sr-only"
+                      onChange={handleFileChange}
+                      disabled={uploading}
+                    />
+                  </label>
                 </div>
+                {uploadError && (
+                  <p className="mt-4 text-sm text-red-600">{uploadError}</p>
+                )}
 
                 <div className="mt-10">
                   {photos.length === 0 ? (
-                    <p className="text-center text-gray-500">
-                      No photos yet.
-                    </p>
+                    <p className="text-center text-gray-500">No photos yet.</p>
                   ) : (
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {photos.map((photo) => (
