@@ -2,7 +2,9 @@ import { randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
 
-const dataDir = path.join(process.cwd(), "src", "data");
+// Use a writable directory in production (e.g., /tmp on Vercel). Allow override via DATA_DIR.
+const dataDir =
+  process.env.DATA_DIR || path.join(process.cwd(), "tmp", "data");
 const eventsPath = path.join(dataDir, "events.json");
 const photosPath = path.join(dataDir, "photos.json");
 
