@@ -4,6 +4,7 @@ import {
   findEventByCode,
   getPhotoCount,
   normalizeCode,
+  getEvents,
 } from "@/lib/storage";
 
 export async function POST(request) {
@@ -43,7 +44,33 @@ export async function POST(request) {
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
+  const all = searchParams.get("all");
 
+  // If "all" parameter is present, return all events
+  if (all === "true") {
+    try {
+      const events = await getEvents();
+      // Get photo counts for each event
+      const eventsWithCounts = await Promise.all(
+        events.map(async (event) => {
+          const photoCount = await getPhotoCount(event.code);
+          return {
+            ...event,
+            photoCount,
+          };
+        })
+      );
+      return NextResponse.json({ events: eventsWithCounts });
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
+      return NextResponse.json(
+        { error: "Unable to fetch events." },
+        { status: 500 }
+      );
+    }
+  }
+
+  // Otherwise, get event by code (existing behavior)
   if (!code) {
     return NextResponse.json(
       { error: "Event code is required." },
