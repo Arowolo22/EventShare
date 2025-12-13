@@ -25,8 +25,16 @@ export async function POST(request) {
     return NextResponse.json({ event }, { status: 201 });
   } catch (error) {
     console.error("Failed to create event:", error);
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
     return NextResponse.json(
-      { error: "Unable to create event. Please try again." },
+      { 
+        error: error.message || "Unable to create event. Please try again.",
+        details: process.env.NODE_ENV === "development" ? error.message : undefined
+      },
       { status: 500 }
     );
   }
