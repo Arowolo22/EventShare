@@ -66,24 +66,62 @@ export default function GalleryPage({ params, searchParams }) {
     setUploading(true);
     setUploadError("");
 
+    // Limit how many uploads run at the same time so we don't overload the server
+    const CONCURRENCY_LIMIT = 4;
+
+    const uploadSingle = async (file) => {
+      const formData = new FormData();
+      formData.append("eventCode", codeParam);
+      formData.append("file", file);
+
+      const response = await fetch("/api/photos", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || "Upload failed.");
+      }
+
+      const { photo } = await response.json();
+      return photo;
+    };
+
     try {
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append("eventCode", codeParam);
-        formData.append("file", file);
+      const queue = [...files];
+      const inFlight = new Set();
+      const uploadedPhotos = [];
 
-        const response = await fetch("/api/photos", {
-          method: "POST",
-          body: formData,
-        });
+      while (queue.length > 0 || inFlight.size > 0) {
+        while (queue.length > 0 && inFlight.size < CONCURRENCY_LIMIT) {
+          const file = queue.shift();
+          const promise = uploadSingle(file)
+            .then((photo) => {
+              uploadedPhotos.push(photo);
+            })
+            .catch((error) => {
+              // Capture the first error; others will still continue
+              if (!uploadError) {
+                setUploadError(error.message);
+              }
+            })
+            .finally(() => {
+              inFlight.delete(promise);
+            });
 
-        if (!response.ok) {
-          const data = await response.json().catch(() => ({}));
-          throw new Error(data.error || "Upload failed.");
+          inFlight.add(promise);
         }
 
-        const { photo } = await response.json();
-        setPhotos((current) => [photo, ...current]);
+        // Wait for at least one upload to finish before continuing
+        if (inFlight.size > 0) {
+          await Promise.race(inFlight);
+        }
+      }
+
+      if (uploadedPhotos.length > 0) {
+        // Add new photos to the top of the gallery
+        setPhotos((current) => [...uploadedPhotos, ...current]);
       }
     } catch (error) {
       setUploadError(error.message);
