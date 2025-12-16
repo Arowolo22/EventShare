@@ -215,7 +215,7 @@ export default function GalleryPage({ params, searchParams }) {
                           <img
                             src={photo.url}
                             alt={`Upload ${photo.id}`}
-                            className="h-70 w-full object-cover"
+                            className="h-100 w-full object-cover"
                             loading="lazy"
                           />
                           <figcaption className="px-4 py-3 text-xs text-gray-500">
